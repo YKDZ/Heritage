@@ -1,0 +1,47 @@
+{
+  "name": "heritage",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vue-tsc && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^6.5.2",
+    "@fortawesome/free-brands-svg-icons": "^6.5.2",
+    "@fortawesome/free-regular-svg-icons": "^6.5.2",
+    "@fortawesome/free-solid-svg-icons": "^6.5.2",
+    "@fortawesome/vue-fontawesome": "^3.0.8",
+    "axios": "^1.7.2",
+    "bcryptjs": "^2.4.3",
+    "dotenv": "^16.4.5",
+    "events": "^3.3.0",
+    "file-saver": "^2.0.5",
+    "lunisolar": "^2.5.0",
+    "pinia": "^2.1.7",
+    "postcss-import": "^16.1.0",
+    "simplebar-vue": "^2.3.5",
+    "swiper": "^11.1.4",
+    "vditor": "^3.10.4",
+    "vue": "^3.4.21",
+    "vue-json-excel3": "^1.0.24",
+    "vue-router": "^4.3.2",
+    "ws": "^8.17.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20.12.12",
+    "@types/ws": "^8.5.10",
+    "@vitejs/plugin-vue": "^5.0.4",
+    "autoprefixer": "^10.4.19",
+    "date-fns": "^3.6.0",
+    "floating-vue": "^5.2.2",
+    "postcss": "^8.4.38",
+    "tailwindcss": "^3.4.3",
+    "typescript": "^5.2.2",
+    "vite": "^5.3.1",
+    "vue-tsc": "^2.0.6",
+    "vuex": "^4.0.2"
+  }
+}

@@ -1,0 +1,107 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["fullTextSearch", "fullTextIndex"]
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id              String        @id @default(uuid())
+  name            String
+  email           String        @unique
+  password        String
+  isAdmin         Int
+  registeredAt    DateTime      @default(now())
+  // 仅占位 无完整验证功能
+  tokenVersion    Int           @default(0)
+  createdPosts    Post[]        @relation("CreatedPosts")
+  createdComments Comment[]     @relation("CreatedComments")
+  histories       ViewHistory[] @relation("ViewHistory")
+}
+
+model ViewHistory {
+  id     Int      @id @default(autoincrement())
+  time   DateTime @default(now())
+  User   User     @relation(name: "ViewHistory", fields: [userId], references: [id])
+  userId String
+  post   Post?    @relation(fields: [postId], references: [id])
+  postId Int?
+}
+
+model Post {
+  id          Int           @id @default(autoincrement())
+  createdAt   DateTime      @default(now())
+  publishedAt DateTime?
+  title       String
+  published   Boolean       @default(false)
+  authorId    String
+  author      User          @relation(name: "CreatedPosts", fields: [authorId], references: [id])
+  content     String        @db.Text
+  heritages   Json
+  comments    Comment[]     @relation("PostComments")
+  viewHistory ViewHistory[]
+  tags        PostTag[]
+  badges      PostBadge[]
+
+  @@fulltext([content, title])
+}
+
+model Tag {
+  id          Int       @id @default(autoincrement())
+  title       String
+  description String
+  faIcon      String
+  iconColor   String
+  posts       PostTag[]
+}
+
+// 多对多连接表
+model PostTag {
+  postId Int
+  post   Post @relation(fields: [postId], references: [id], onDelete: Cascade)
+  tagId  Int
+  tag    Tag  @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([postId, tagId])
+}
+
+model Badge {
+  id        Int         @id @default(autoincrement())
+  name      String
+  faIcon    String
+  iconColor String
+  posts     PostBadge[]
+}
+
+// 多对多连接表
+model PostBadge {
+  postId  Int
+  post    Post  @relation(fields: [postId], references: [id], onDelete: Cascade)
+  badgeId Int
+  badge   Badge @relation(fields: [badgeId], references: [id], onDelete: Cascade)
+
+  @@id([postId, badgeId])
+}
+
+model Comment {
+  id        Int       @id @default(autoincrement())
+  content   String    @db.Text
+  createdAt DateTime? @default(now())
+  updatedAt DateTime  @updatedAt
+  post      Post      @relation(name: "PostComments", fields: [postId], references: [id], onDelete: Cascade)
+  postId    Int
+  parentId  Int?
+  parent    Comment?  @relation("CommentChildren", fields: [parentId], references: [id], onDelete: Cascade)
+  children  Comment[] @relation("CommentChildren")
+  author    User      @relation(name: "CreatedComments", fields: [authorId], references: [id])
+  authorId  String
+}
